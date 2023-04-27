@@ -9,6 +9,7 @@ posts = []
 lock = Lock()
 
 
+
 def generate_key(length=12):
     """Generate a unique key for the post."""
     chars = string.ascii_letters + string.digits
