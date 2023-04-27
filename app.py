@@ -1,10 +1,13 @@
 import random
 import string
 from datetime import datetime
+from threading import Lock
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 posts = []
+lock = Lock()
+
 
 
 def generate_key(length=12):
@@ -15,10 +18,11 @@ def generate_key(length=12):
 
 def find_post_by_id(post_id):
     """Return the post with the given ID, or None if not found."""
-    for post in posts:
-        if post['id'] == post_id:
-            return post
-    return None
+    with lock:
+        for post in posts:
+            if post['id'] == post_id:
+                return post
+        return None
 
 
 @app.route('/post', methods=['POST'])
@@ -31,15 +35,16 @@ def create_post():
     if not message or not isinstance(message, str):
         return jsonify({'err': 'Request body must contain a "msg" field with a string value'}), 400
 
-    post_id = len(posts) + 1
-    while find_post_by_id(post_id):
-        post_id += 1
+    with lock:
+        post_id = len(posts) + 1
+        while find_post_by_id(post_id):
+            post_id += 1
 
-    key = generate_key()
-    timestamp = datetime.utcnow().isoformat()
+        key = generate_key()
+        timestamp = datetime.utcnow().isoformat()
 
-    post = {'id': post_id, 'key': key, 'timestamp': timestamp, 'msg': message}
-    posts.append(post)
+        post = {'id': post_id, 'key': key, 'timestamp': timestamp, 'msg': message}
+        posts.append(post)
 
     return jsonify({'id': post_id, 'key': key, 'timestamp': timestamp}), 201
 
@@ -57,14 +62,15 @@ def get_post(post_id):
 @app.route('/post/<int:post_id>/delete/<string:key>', methods=['DELETE'])
 def delete_post(post_id, key):
     """Delete the post with the given ID and key."""
-    post = find_post_by_id(post_id)
-    if not post:
-        return jsonify({'err': 'Post not found'}), 404
+    with lock:
+        post = find_post_by_id(post_id)
+        if not post:
+            return jsonify({'err': 'Post not found'}), 404
 
-    if post['key'] != key:
-        return jsonify({'err': 'Forbidden'}), 403
+        if post['key'] != key:
+            return jsonify({'err': 'Forbidden'}), 403
 
-    posts.remove(post)
+        posts.remove(post)
 
     return jsonify({'id': post['id'], 'key': post['key'], 'timestamp': post['timestamp']}), 200
 
