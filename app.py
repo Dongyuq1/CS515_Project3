@@ -97,84 +97,85 @@ def create_post():
         if not user or user['key'] != user_key:
             return jsonify({'err': 'Invalid user ID or key'}), 400
 
-        parent_id = request.json.get('parent_id')
-        if parent_id:
-            parent_post = find_post_by_id(parent_id)
-            if not parent_post:
-                return jsonify({'err': 'Parent post not found'}), 400
+    parent_id = request.json.get('parent_id')
+    if parent_id:
+        parent_post = find_post_by_id(parent_id)
+        if not parent_post:
+            return jsonify({'err': 'Parent post not found'}), 400
 
-        post_id = len(posts) + 1
-        while find_post_by_id(post_id):
-            post_id += 1
+    post_id = len(posts) + 1
+    while find_post_by_id(post_id):
+        post_id += 1
 
-        key = generate_key()
-        timestamp = datetime.utcnow().isoformat()
+    key = generate_key()
+    timestamp = datetime.utcnow().isoformat()
 
-        post = {'id': post_id, 'key': key, 'timestamp': timestamp, 'msg': message, 'user_id': user_id,
-                'parent_id': parent_id}
-        posts.append(post)
+    post = {'id': post_id, 'key': key, 'timestamp': timestamp, 'msg': message, 'user_id': user_id, 'parent_id': parent_id}
+    posts.append(post)
 
-        return jsonify({'id': post_id, 'key': key, 'timestamp': timestamp}), 201
+    return jsonify({'id': post_id, 'key': key, 'timestamp': timestamp}), 201
 
-    @app.route('/post/<int:post_id>', methods=['GET'])
-    def get_post(post_id):
-        post = find_post_by_id(post_id)
-        if not post:
-            return jsonify({'err': 'Post not found'}), 404
 
-        children = [child_post['id'] for child_post in posts if child_post.get('parent_id') == post_id]
+@app.route('/post/<int:post_id>', methods=['GET'])
+def get_post(post_id):
+    post = find_post_by_id(post_id)
+    if not post:
+        return jsonify({'err': 'Post not found'}), 404
 
-        return jsonify(
-            {'id': post['id'], 'timestamp': post['timestamp'], 'msg': post['msg'], 'parent_id': post.get('parent_id'),
-             'children': children}), 200
+    children = [child_post['id'] for child_post in posts if child_post.get('parent_id') == post_id]
 
-    @app.route('/post/<int:post_id>/delete/<string:key>', methods=['DELETE'])
-    def delete_post(post_id, key):
-        post = find_post_by_id(post_id)
-        if not post:
-            return jsonify({'err': 'Post not found'}), 404
+    return jsonify({'id': post['id'], 'timestamp': post['timestamp'], 'msg': post['msg'], 'parent_id': post.get('parent_id'), 'children': children}), 200
 
-        if post['key'] != key:
-            user = find_user_by_id(post.get('user_id'))
-            if not user or user['key'] != key:
-                return jsonify({'err': 'Forbidden'}), 403
 
-        posts.remove(post)
+@app.route('/post/<int:post_id>/delete/<string:key>', methods=['DELETE'])
+def delete_post(post_id, key):
+    post = find_post_by_id(post_id)
+    if not post:
+        return jsonify({'err': 'Post not found'}), 404
 
-        return jsonify({'id': post['id'], 'key': post['key'], 'timestamp': post['timestamp']}), 200
+    if post['key'] != key:
+        user = find_user_by_id(post.get('user_id'))
+        if not user or user['key'] != key:
+            return jsonify({'err': 'Forbidden'}), 403
 
-    @app.route('/posts', methods=['GET'])
-    def get_posts_in_range():
-        start_date_str = request.args.get('start')
-        end_date_str = request.args.get('end')
+    posts.remove(post)
 
-        if start_date_str:
-            start_date = datetime.fromisoformat(start_date_str)
-        else:
-            start_date = None
+    return jsonify({'id': post['id'], 'key': post['key'], 'timestamp': post['timestamp']}), 200
 
-        if end_date_str:
-            end_date = datetime.fromisoformat(end_date_str)
-        else:
-            end_date = None
 
-        filtered_posts = []
-        for post in posts:
-            post_date = datetime.fromisoformat(post['timestamp'])
-            if (not start_date or post_date >= start_date) and (not end_date or post_date <= end_date):
-                filtered_posts.append(post)
+@app.route('/posts', methods=['GET'])
+def get_posts_in_range():
+    start_date_str = request.args.get('start')
+    end_date_str = request.args.get('end')
 
-        return jsonify(filtered_posts), 200
+    if start_date_str:
+        start_date = datetime.fromisoformat(start_date_str)
+    else:
+        start_date = None
 
-    @app.route('/user/<int:user_id>/posts', methods=['GET'])
-    def get_posts_by_user(user_id):
-        if not find_user_by_id(user_id):
-            return jsonify({'err': 'User not found'}), 404
+    if end_date_str:
+        end_date = datetime.fromisoformat(end_date_str)
+    else:
+        end_date = None
 
-        filtered_posts = [post for post in posts if post.get('user_id') == user_id]
+    filtered_posts = []
+    for post in posts:
+        post_date = datetime.fromisoformat(post['timestamp'])
+        if (not start_date or post_date >= start_date) and (not end_date or post_date <= end_date):
+            filtered_posts.append(post)
 
-        return jsonify(filtered_posts), 200
+    return jsonify(filtered_posts), 200
 
-    if __name__ == '__main__':
-        app.run(debug=True)
 
+@app.route('/user/<int:user_id>/posts', methods=['GET'])
+def get_posts_by_user(user_id):
+    if not find_user_by_id(user_id):
+        return jsonify({'err': 'User not found'}), 404
+
+    filtered_posts = [post for post in posts if post.get('user_id') == user_id]
+
+    return jsonify(filtered_posts), 200
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
