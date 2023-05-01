@@ -134,20 +134,16 @@ def create_post():
     return jsonify({'id': id, 'key': key, 'timestamp': timestamp, 'user_id': user_id, 'reply_to': reply_to}), 201
 
 
-@app.route('/post/<int:id>', methods=['GET'])
-def read_post(id):
-    """Retrieve the post with the given ID."""
-    post = get_post_by_id(id)
+
+@app.route('/post/<int:post_id>', methods=['GET'])
+def get_post(post_id):
+    post = find_post_by_id(post_id)
     if not post:
         return jsonify({'err': 'Post not found'}), 404
 
-    user_id = post.get('user_id')
-    user = get_user_by_id(user_id) if user_id else None
-    user_unique_key = user['unique_key'] if user else None
+    children = [child_post['id'] for child_post in posts if child_post.get('parent_id') == post_id]
 
-    return jsonify(
-        {'id': post['id'], 'timestamp': post['timestamp'], 'msg': post['msg'], 'user_unique_key': user_unique_key,
-         'reply_to': post['reply_to']}), 200
+    return jsonify({'id': post['id'], 'timestamp': post['timestamp'], 'msg': post['msg'], 'parent_id': post.get('parent_id'), 'children': children}), 200
 
 
 @app.route('/post/<int:id>/delete', methods=['POST'])
