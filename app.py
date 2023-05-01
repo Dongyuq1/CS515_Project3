@@ -32,6 +32,19 @@ def get_user_by_unique_key(unique_key):
         if user['unique_key'] == unique_key:
             return user
     return None
+    
+def find_post_by_id(post_id):
+    for post in posts:
+        if post['id'] == post_id:
+            return post
+    return None
+
+
+def find_user_by_id(user_id):
+    for user in users:
+        if user['id'] == user_id:
+            return user
+    return None
 
 @app.route('/user', methods=['POST'])
 def create_user():
@@ -96,11 +109,16 @@ def create_post():
 
     user_id = request.json.get('user_id')
     user_key = request.json.get('user_key')
+    parent_id = request.json.get('parent_id')
     user = None
     if user_id:
         user = get_user_by_id(user_id)
         if not user or user['key'] != user_key:
             return jsonify({'err': 'Invalid user credentials'}), 403
+    if parent_id:
+        parent_post = find_post_by_id(parent_id)
+        if not parent_post:
+            return jsonify({'err': 'Parent post not found'}), 400 
 
     id = len(posts) + 1
     while get_post_by_id(id):
@@ -110,7 +128,7 @@ def create_post():
     timestamp = datetime.utcnow().isoformat()
     reply_to = request.json.get('reply_to', None)
 
-    post = {'id': id, 'key': key, 'timestamp': timestamp, 'msg': msg, 'user_id': user_id, 'reply_to': reply_to}
+    post = {'id': id, 'key': key, 'timestamp': timestamp, 'msg': msg, 'user_id': user_id, 'parent_id': parent_id, 'reply_to': reply_to}
     posts.append(post)
 
     return jsonify({'id': id, 'key': key, 'timestamp': timestamp, 'user_id': user_id, 'reply_to': reply_to}), 201
