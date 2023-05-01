@@ -154,6 +154,28 @@ def delete_post(id):
 
     return jsonify({'id': post['id'], 'key': post['key'], 'timestamp': post['timestamp']}), 200
 
+@app.route('/posts', methods=['GET'])
+def get_posts_in_range():
+    start_date_str = request.args.get('start')
+    end_date_str = request.args.get('end')
+
+    if start_date_str:
+        start_date = datetime.fromisoformat(start_date_str)
+    else:
+        start_date = None
+
+    if end_date_str:
+        end_date = datetime.fromisoformat(end_date_str)
+    else:
+        end_date = None
+
+    filtered_posts = []
+    for post in posts:
+        post_date = datetime.fromisoformat(post['timestamp'])
+        if (not start_date or post_date >= start_date) and (not end_date or post_date <= end_date):
+            filtered_posts.append(post)
+
+    return jsonify(filtered_posts), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
