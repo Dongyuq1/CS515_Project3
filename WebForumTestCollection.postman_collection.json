@@ -319,7 +319,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"user_id\": {{user_id2}},\n    \"user_key\": \"{{user_key2}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"raw": "{\n    \"user_id\": {{user_id2}},\n    \"user_key\": \"{{user_key2}}\",\n    \"msg\": \"This is a post by user 2!\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -342,7 +342,17 @@
 			"name": "Read the Post by User 1",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/post/{{post_id1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post",
+						"{{post_id1}}"
+					]
+				}
 			},
 			"response": []
 		},
