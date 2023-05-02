@@ -2,10 +2,12 @@ import random
 import string
 from datetime import datetime
 from flask import Flask, jsonify, request
+import threading
 
 app = Flask(__name__)
 posts = []
 users = []
+state_lock = threading.Lock()
 
 
 def generate_key(length=12):
@@ -44,17 +46,20 @@ def create_user_route():
     if not username or not isinstance(username, str):
         return jsonify({'err': 'Request body must contain a "username" field with a string value'}), 400
 
-    user = create_user(username)
+    with state_lock:
+        user = create_user(username)
     return jsonify({'id': user['id'], 'username': user['username'], 'key': user['key']}), 201
 
 
 @app.route('/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-    user = find_user_by_id(user_id)
+    with state_lock:
+        user = find_user_by_id(user_id)
     if not user:
         return jsonify({'err': 'User not found'}), 404
 
-    return jsonify({'id': user['id'], 'username': user['username'], 'real_name': user['real_name'], 'avatar': user['avatar']}), 200
+    return jsonify(
+        {'id': user['id'], 'username': user['username'], 'real_name': user['real_name'], 'avatar': user['avatar']}), 200
 
 
 @app.route('/user/<int:user_id>', methods=['PUT'])
@@ -62,7 +67,8 @@ def update_user(user_id):
     if not request.is_json:
         return jsonify({'err': 'Request body must be JSON'}), 400
 
-    user = find_user_by_id(user_id)
+    with state_lock:
+        user = find_user_by_id(user_id)
     if not user:
         return jsonify({'err': 'User not found'}), 404
 
@@ -78,7 +84,8 @@ def update_user(user_id):
     if avatar:
         user['avatar'] = avatar
 
-    return jsonify({'id': user['id'], 'username': user['username'], 'real_name': user['real_name'], 'avatar': user['avatar']}), 200
+    return jsonify(
+        {'id': user['id'], 'username': user['username'], 'real_name': user['real_name'], 'avatar': user['avatar']}), 200
 
 
 @app.route('/post', methods=['POST'])
@@ -93,43 +100,51 @@ def create_post():
     user_id = request.json.get('user_id')
     user_key = request.json.get('user_key')
     if user_id and user_key:
-        user = find_user_by_id(user_id)
+        with state_lock:
+            user = find_user_by_id(user_id)
         if not user or user['key'] != user_key:
             return jsonify({'err': 'Invalid user ID or key'}), 400
 
     parent_id = request.json.get('parent_id')
     if parent_id:
-        parent_post = find_post_by_id(parent_id)
+        with state_lock:
+            parent_post = find_post_by_id(parent_id)
         if not parent_post:
             return jsonify({'err': 'Parent post not found'}), 400
 
-    post_id = len(posts) + 1
-    while find_post_by_id(post_id):
-        post_id += 1
+    with state_lock:
+        post_id = len(posts) + 1
+        while find_post_by_id(post_id):
+            post_id += 1
 
-    key = generate_key()
-    timestamp = datetime.utcnow().isoformat()
+        key = generate_key()
+        timestamp = datetime.utcnow().isoformat()
 
-    post = {'id': post_id, 'key': key, 'timestamp': timestamp, 'msg': message, 'user_id': user_id, 'parent_id': parent_id}
-    posts.append(post)
+        post = {'id': post_id, 'key': key, 'timestamp': timestamp, 'msg': message, 'user_id': user_id,
+                'parent_id': parent_id, 'children': []}
+        if parent_id:
+            parent_post['children'].append(post_id)
+        posts.append(post)
 
     return jsonify({'id': post_id, 'key': key, 'timestamp': timestamp}), 201
 
 
 @app.route('/post/<int:post_id>', methods=['GET'])
 def get_post(post_id):
-    post = find_post_by_id(post_id)
+    with state_lock:
+        post = find_post_by_id(post_id)
     if not post:
         return jsonify({'err': 'Post not found'}), 404
 
-    children = [child_post['id'] for child_post in posts if child_post.get('parent_id') == post_id]
-
-    return jsonify({'id': post['id'], 'timestamp': post['timestamp'], 'msg': post['msg'], 'parent_id': post.get('parent_id'), 'children': children}), 200
+    return jsonify(
+        {'id': post['id'], 'timestamp': post['timestamp'], 'msg': post['msg'], 'parent_id': post.get('parent_id'),
+         'children': post['children']}), 200
 
 
 @app.route('/post/<int:post_id>/delete/<string:key>', methods=['DELETE'])
 def delete_post(post_id, key):
-    post = find_post_by_id(post_id)
+    with state_lock:
+        post = find_post_by_id(post_id)
     if not post:
         return jsonify({'err': 'Post not found'}), 404
 
@@ -138,7 +153,8 @@ def delete_post(post_id, key):
         if not user or user['key'] != key:
             return jsonify({'err': 'Forbidden'}), 403
 
-    posts.remove(post)
+    with state_lock:
+        posts.remove(post)
 
     return jsonify({'id': post['id'], 'key': post['key'], 'timestamp': post['timestamp']}), 200
 
