@@ -1,6 +1,6 @@
 ## Names and Stevens Login
-Yuqi Dong
-Jia Gao
+Yuqi Dong ydong28@stevens.edu
+Jia Gao jgao32@stevens.edu
 Chih-Chao Wang cwang126@stevens.edu
 
 ## Github Repo
