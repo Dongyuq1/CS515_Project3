@@ -8,6 +8,6 @@ PID=$!
 
 sleep 3
 
-newman run forum_test_collection.postman_collection.json -e env_test.json
+newman run WebForumTestCollection.postman_collection.json -e WebForumTestEnv.postman_environment.json
 
 kill $PID
