@@ -1,0 +1,816 @@
+{
+	"info": {
+		"_postman_id": "755c63ee-2662-4aca-92ff-b64ad0b73e13",
+		"name": "WebForumTestCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27192537"
+	},
+	"item": [
+		{
+			"name": "User 1 Creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"user_key1\", jsonData.key);",
+							"pm.environment.set(\"user_id1\", jsonData.id);",
+							"pm.environment.set(\"user_name1\", jsonData.username);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{user_1}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User 2 Creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"user_key2\", jsonData.key);",
+							"pm.environment.set(\"user_id2\", jsonData.id);",
+							"pm.environment.set(\"user_name2\", jsonData.username);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{user_2}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User 1 Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User 2 Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id2}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User 1 Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"key\": \"{{user_key1}}\",\n    \"real_name\": \"{{user_realname1}}\",\n    \"avatar\": \"https://stevens.com/{{user_realname1}}.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User 2 Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"key\": \"{{user_key2}}\",\n    \"real_name\": \"{{user_realname2}}\",\n    \"avatar\": \"https://stevens.com/{{user_realname2}}.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id2}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User 1 Profile again",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User 2 Profile again",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id2}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_key1\", jsonData.key);",
+							"pm.environment.set(\"post_id1\", jsonData.id);",
+							"pm.environment.set(\"post_timestamp1\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post by user 1!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_key2\", jsonData.key);",
+							"pm.environment.set(\"post_id2\", jsonData.id);",
+							"pm.environment.set(\"post_timestamp2\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id2}},\n    \"user_key\": \"{{user_key2}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read the Post by User 1",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Read the Post by User 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/post/{{post_id2}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post",
+						"{{post_id2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creat a Reply blow Post 1 by user 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"reply_key\", jsonData.key);",
+							"pm.environment.set(\"reply_id\", jsonData.id);",
+							"pm.environment.set(\"reply_timestamp\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id2}},\n    \"user_key\": \"{{user_key2}}\",\n    \"msg\": \"This is a reply by user 2\",\n    \"parent_id\": {{post_id1}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read the Reply blow Post 1 by user 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/post/{{reply_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post",
+						"{{reply_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read the Post by User 1 Again",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/post/{{post_id1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post",
+						"{{post_id1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post Created by User 2",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/post/{{post_id2}}/delete/{{post_key2}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post",
+						"{{post_id2}}",
+						"delete",
+						"{{post_key2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_timestamp_copy\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1 Copy 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_timestamp_copy2\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1 Copy 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_timestamp_copy3\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1 Copy 4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_timestamp_copy4\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1 Copy 5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_timestamp_copy5\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1 Copy 6",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_timestamp_copy6\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post by User 1 Copy 7",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post_timestamp_copy7\", jsonData.timestamp);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id1}},\n    \"user_key\": \"{{user_key1}}\",\n    \"msg\": \"This is a post!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/post",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts in Range",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/posts?start={{post_timestamp1}}&end={{post_timestamp_copy7}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"posts"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{post_timestamp1}}"
+						},
+						{
+							"key": "end",
+							"value": "{{post_timestamp_copy7}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts by User 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id1}}/posts",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id1}}",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts by User 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{user_id2}}/posts",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{user_id2}}",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "user_id1",
+			"value": "1"
+		},
+		{
+			"key": "user_1",
+			"value": "testuser1"
+		},
+		{
+			"key": "user_key1",
+			"value": "1"
+		}
+	]
+}
